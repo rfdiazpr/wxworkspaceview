@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxWorkspaceTest", "wxWorkspaceTest\wxWorkspaceTest.vcproj", "{0F7A5DAE-9E30-4DF3-9643-7BAC93076319}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1} = {5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wxWorkspaceView", "wxWorkspaceView\wxWorkspaceView.vcproj", "{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0F7A5DAE-9E30-4DF3-9643-7BAC93076319}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0F7A5DAE-9E30-4DF3-9643-7BAC93076319}.Debug|Win32.Build.0 = Debug|Win32
+		{0F7A5DAE-9E30-4DF3-9643-7BAC93076319}.Release|Win32.ActiveCfg = Release|Win32
+		{0F7A5DAE-9E30-4DF3-9643-7BAC93076319}.Release|Win32.Build.0 = Release|Win32
+		{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}.Debug|Win32.Build.0 = Debug|Win32
+		{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}.Release|Win32.ActiveCfg = Release|Win32
+		{5039DD2D-DA2C-4F29-90B5-B7DA295CDDB1}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
