@@ -6,6 +6,12 @@
 
 namespace WorkspaceView
 {
+	struct ThijzPortInfo: public PortInfo
+	{
+		float LabelAngle;
+		wxRealPoint LabelDirection;
+	};
+
 	class ThijzWorkspaceCable: public Cable
 	{
 	public:

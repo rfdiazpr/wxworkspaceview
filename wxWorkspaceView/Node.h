@@ -10,6 +10,21 @@
 namespace WorkspaceView
 {
 	/**
+	 * This struct represents information about a connector.
+	 */
+	struct PortInfo
+	{
+		/**
+		 * The label of this port.
+		 */
+		wxString Label;
+		/**
+		 * The area in which a user can click to start drawing cables.
+		 */
+		wxRect ConnectorArea;
+	};
+
+	/**
 	 * This is the base class for nodes which can be drawn on the workspace.
 	 * Nodes should be created through the WorkspaceFactory.
 	 */
@@ -22,6 +37,23 @@ namespace WorkspaceView
 		Node(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title);
 	public:
 		/**
+		 * Adds a new input port to this node and returns the index of it.
+		 */
+		virtual size_t AddInputPort(const PortInfo& Port);
+		/**
+		 * Adds a new output port to this node and returns the index of it.
+		 */
+		virtual size_t AddOutputPort(const PortInfo& Port);
+		/**
+		 * Removes an input port by its index.
+		 */
+		void RemoveInputPort(size_t Index);
+		/**
+		 * Removes an input port by its index.
+		 */
+		void RemoveOutputPort(size_t Index);
+	public:
+		/**
 		 * Returns true if this items hits with an connector.
 		 */
 		virtual bool HasHitWithConnector(const wxPoint& Position, ConnectorInfo* Result);
@@ -31,13 +63,6 @@ namespace WorkspaceView
 		 */
 		wxRect GetPortArea(int PortIndex, bool Output) const;
 	protected:
-		struct PortInfo
-		{
-			wxString Label;
-			float LabelAngle;
-			wxRealPoint LabelDirection; 
-			wxRect ConnectorArea;
-		};
 		/**
 		 * The output connector list.
 		 */

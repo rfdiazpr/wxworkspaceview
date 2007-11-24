@@ -10,6 +10,30 @@ namespace WorkspaceView
 		: Item(WorkspaceItemTypeNode, Area), Title(Title)
 	{
 	}
+	
+	size_t Node::AddInputPort(const PortInfo& Port)
+	{
+		InputList.push_back(Port);
+
+		return InputList.size() - 1;
+	}
+	
+	size_t Node::AddOutputPort(const PortInfo& Port)
+	{
+		OutputList.push_back(Port);
+
+		return OutputList.size() - 1;
+	}
+	
+	void Node::RemoveInputPort(size_t Index)
+	{
+		InputList.erase(InputList.begin() + Index);
+	}
+	
+	void Node::RemoveOutputPort(size_t Index)
+	{
+		OutputList.erase(OutputList.begin() + Index);
+	}
 
 	bool Node::HasHitWithConnector(const wxPoint& Position, ConnectorInfo* Result)
 	{

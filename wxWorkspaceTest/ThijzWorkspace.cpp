@@ -113,13 +113,13 @@ namespace WorkspaceView
 			float x = (Radius + NODE_OUTERBORDERSIZE) * cos(phi) + Radius;
 			float y = (Radius + NODE_OUTERBORDERSIZE) * sin(phi) + Radius;
 
-			PortInfo p;
-			p.Label = "";
-			p.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
-			p.LabelAngle = -phi * 57.295780f;
-			p.LabelDirection.x = -cos(phi);
-			p.LabelDirection.y = -sin(phi);
-			OutputList.push_back(p);
+			ThijzPortInfo Port;
+			Port.Label = "";
+			Port.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
+			Port.LabelAngle = -phi * 57.295780f;
+			Port.LabelDirection.x = -cos(phi);
+			Port.LabelDirection.y = -sin(phi);
+			OutputList.push_back(Port);
 		}
 
 		for (int Index = 0; Index < InputCount; ++Index)
@@ -131,13 +131,13 @@ namespace WorkspaceView
 			float x = (Radius+NODE_OUTERBORDERSIZE) * cos(phi) + Radius;
 			float y = (Radius+NODE_OUTERBORDERSIZE) * sin(phi) + Radius;
 
-			PortInfo p;
-			p.Label = "input";
-			p.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
-			p.LabelAngle = -phi * 57.295780f;
-			p.LabelDirection.x = -cos(phi);
-			p.LabelDirection.y = -sin(phi);
-			InputList.push_back(p);
+			ThijzPortInfo Port;
+			Port.Label = "input";
+			Port.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
+			Port.LabelAngle = -phi * 57.295780f;
+			Port.LabelDirection.x = -cos(phi);
+			Port.LabelDirection.y = -sin(phi);
+			InputList.push_back(Port);
 		}
 		
 		TitleFont = wxFont(
