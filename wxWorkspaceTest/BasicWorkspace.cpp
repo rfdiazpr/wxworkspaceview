@@ -5,164 +5,167 @@
 #include "stdafx.h"
 #include "BasicWorkspace.h"
 
-BasicWorkspaceCable::BasicWorkspaceCable(WorkspaceNode *Input, WorkspaceNode *Output, int FromIndex, int ToIndex)
-: WorkspaceCable(Input, Output, FromIndex, ToIndex)
+namespace WorkspaceView
 {
-	ConnectCable(Input, Output, FromIndex, ToIndex);
-}
-
-void BasicWorkspaceCable::Draw(wxPaintDC* dc, const WorkspaceState& State)
-{
-	float ZoomFactor = State.ZoomFactor;
-
-	// calculate world location of spline points
-	wxPoint posFrom = State.WorldToScreen(PositionBeg);
-	wxPoint posTo = State.WorldToScreen(PositionEnd);
-	wxPoint p2 = State.WorldToScreen(PositionCurve1);
-	wxPoint p3 = State.WorldToScreen(PositionCurve2);
-
-	int CableSize = (int)(2.f * ZoomFactor);
-
-	wxPoint Points[4] = {posFrom, p2, p3, posTo};
-
-	wxRealPoint dir;
-	dir.x = p3.x - posTo.x;
-	dir.y = p3.y - posTo.y;
-
-	float len = sqrt(dir.x*dir.x + dir.y*dir.y);
-	dir.x /= len;
-	dir.y /= len;
-
-	// x' = cos(theta)*x - sin(theta)*y
-	// y' = sin(theta)*x + cos(theta)*y
-	float theta = 0.33f;
-	float lenk = 15.0f * ZoomFactor;
-
-	float nx1 = cos(theta)*dir.x - sin(theta)*dir.y;
-	float ny1 = sin(theta)*dir.x + cos(theta)*dir.y;
-
-	float nx2 = cos(-theta)*dir.x - sin(-theta)*dir.y;
-	float ny2 = sin(-theta)*dir.x + cos(-theta)*dir.y;
-
-	wxPoint pa( posTo.x + (int)(nx1*lenk), posTo.y + (int)(ny1*lenk));
-	wxPoint pb( posTo.x + (int)(nx2*lenk), posTo.y + (int)(ny2*lenk));
-
-	wxPoint cap[3] = { posTo, pb, pa };
-
-	if (IsSelected())
-		dc->SetPen(wxPen(wxColor(255, 100, 100), CableSize));
-	else
-		dc->SetPen(wxPen(wxColor(0, 0, 0), CableSize));
-
-	dc->SetBrush(wxBrush(wxColor(0, 0, 0)));
-	dc->DrawSpline(4, Points);
-	dc->DrawPolygon(3, cap, wxWINDING_RULE);
-}
-
-BasicWorkspaceNode::BasicWorkspaceNode(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)
-: WorkspaceNode(Area, InputCount, OutputCount, Title)
-{
-	for (int Index = 0; Index < InputCount; ++Index)
+	BasicWorkspaceCable::BasicWorkspaceCable(Node *Input, Node *Output, int FromIndex, int ToIndex)
+	: Cable(Input, Output, FromIndex, ToIndex)
 	{
-		PortInfo p;
-		p.Label = "input";
-		InputList.push_back(p);
+		ConnectCable(Input, Output, FromIndex, ToIndex);
 	}
 
-	for (int Index = 0; Index < OutputCount; ++Index)
+	void BasicWorkspaceCable::Draw(wxPaintDC* dc, const State& State)
 	{
-		PortInfo p;
-		OutputList.push_back(p);
-	}
-	
-	TitleFont = wxFont(
-		10, 
-		wxFONTFAMILY_DEFAULT, 
-		wxFONTSTYLE_NORMAL, 
-		wxFONTWEIGHT_NORMAL,
-		false,
-		"Tahoma");
-}
+		float ZoomFactor = State.ZoomFactor;
 
-void BasicWorkspaceNode::Draw(wxPaintDC* dc, const WorkspaceState& State)
-{
-	wxRect WorldArea = GetArea();
-	wxRect ScreenArea = State.WorldToScreen(WorldArea);
+		// calculate world location of spline points
+		wxPoint posFrom = State.WorldToScreen(PositionBeg);
+		wxPoint posTo = State.WorldToScreen(PositionEnd);
+		wxPoint p2 = State.WorldToScreen(PositionCurve1);
+		wxPoint p3 = State.WorldToScreen(PositionCurve2);
 
-	float ZoomFactor = State.ZoomFactor;
+		int CableSize = (int)(2.f * ZoomFactor);
 
-	TitleFont.SetPointSize((int)(10 * ZoomFactor));
-	dc->SetFont(TitleFont);
+		wxPoint Points[4] = {posFrom, p2, p3, posTo};
 
-	wxCoord TextWidth, TextHeight;
-	dc->GetTextExtent(Title, &TextWidth, &TextHeight);
+		wxRealPoint dir;
+		dir.x = p3.x - posTo.x;
+		dir.y = p3.y - posTo.y;
 
-	float padding = 5 * ZoomFactor;
+		float len = sqrt(dir.x*dir.x + dir.y*dir.y);
+		dir.x /= len;
+		dir.y /= len;
 
-	ScreenArea.width = TextWidth 
-		+ padding // Right padding
-		+ padding; // Left padding
+		// x' = cos(theta)*x - sin(theta)*y
+		// y' = sin(theta)*x + cos(theta)*y
+		float theta = 0.33f;
+		float lenk = 15.0f * ZoomFactor;
 
-	wxPoint TextPosition(ScreenArea.x + padding, ScreenArea.y + padding);
+		float nx1 = cos(theta)*dir.x - sin(theta)*dir.y;
+		float ny1 = sin(theta)*dir.x + cos(theta)*dir.y;
 
-	if (IsSelected())
-		dc->SetPen(wxPen(wxColor(255, 100, 100), 1));
-	else
-		dc->SetPen(wxPen(wxColor(255, 255, 255), 1));
+		float nx2 = cos(-theta)*dir.x - sin(-theta)*dir.y;
+		float ny2 = sin(-theta)*dir.x + cos(-theta)*dir.y;
 
-	dc->SetBrush(wxBrush(wxColor(100, 100, 100)));
+		wxPoint pa( posTo.x + (int)(nx1*lenk), posTo.y + (int)(ny1*lenk));
+		wxPoint pb( posTo.x + (int)(nx2*lenk), posTo.y + (int)(ny2*lenk));
 
-	int TitleLineY = ScreenArea.y + padding + padding + TextHeight;
+		wxPoint cap[3] = { posTo, pb, pa };
 
-	float InputWidth = 15 * ZoomFactor;
-	float InputHeight = 15 * ZoomFactor;
-	float InputPadding = 5 * ZoomFactor;
+		if (IsSelected())
+			dc->SetPen(wxPen(wxColor(255, 100, 100), CableSize));
+		else
+			dc->SetPen(wxPen(wxColor(0, 0, 0), CableSize));
 
-	float OutputWidth = 15 * ZoomFactor;
-	float OutputHeight = 15 * ZoomFactor;
-	float OutputPadding = 5 * ZoomFactor;
-
-	int TotalHeightInput = InputList.size() * InputPadding
-		+ InputList.size() * InputHeight 
-		+ InputPadding + InputPadding + TextHeight;
-
-	int TotalHeightOutput = OutputList.size() * OutputPadding
-		+ OutputList.size() * InputHeight 
-		+ OutputPadding + OutputPadding + TextHeight;
-
-	for (size_t Index = 0; Index < InputList.size(); Index++)
-	{
-		int X = ScreenArea.x - InputWidth + 1;
-		int Y = TitleLineY + ((InputPadding + InputWidth) * Index);
-
-		dc->DrawRectangle(X, Y, InputWidth, InputHeight);
+		dc->SetBrush(wxBrush(wxColor(0, 0, 0)));
+		dc->DrawSpline(4, Points);
+		dc->DrawPolygon(3, cap, wxWINDING_RULE);
 	}
 
-	for (size_t Index = 0; Index < OutputList.size(); Index++)
+	BasicWorkspaceNode::BasicWorkspaceNode(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)
+		: Node(Area, InputCount, OutputCount, Title)
 	{
-		int X = ScreenArea.GetRight();
-		int Y = TitleLineY + ((OutputPadding + OutputWidth) * Index);
+		for (int Index = 0; Index < InputCount; ++Index)
+		{
+			PortInfo p;
+			p.Label = "input";
+			InputList.push_back(p);
+		}
 
-		dc->DrawRectangle(X, Y, OutputWidth, OutputHeight);
+		for (int Index = 0; Index < OutputCount; ++Index)
+		{
+			PortInfo p;
+			OutputList.push_back(p);
+		}
+		
+		TitleFont = wxFont(
+			10, 
+			wxFONTFAMILY_DEFAULT, 
+			wxFONTSTYLE_NORMAL, 
+			wxFONTWEIGHT_NORMAL,
+			false,
+			"Tahoma");
 	}
 
-	ScreenArea.height = TotalHeightInput > TotalHeightOutput ? TotalHeightInput : TotalHeightOutput;
+	void BasicWorkspaceNode::Draw(wxPaintDC* dc, const State& State)
+	{
+		wxRect WorldArea = GetArea();
+		wxRect ScreenArea = State.WorldToScreen(WorldArea);
 
-	dc->DrawRectangle(ScreenArea);
-	dc->DrawLine(
-		wxPoint(ScreenArea.x, TitleLineY), 
-		wxPoint(ScreenArea.x + ScreenArea.width, TitleLineY) );
-	
-	dc->SetTextForeground(wxColor(255, 255, 255));
-	dc->DrawText(Title, TextPosition);
-}
+		float ZoomFactor = State.ZoomFactor;
 
-WorkspaceNode* BasicWorkspaceFactory::CreateNode(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)
-{
-	return new BasicWorkspaceNode(Area, InputCount, OutputCount, Title);
-}
+		TitleFont.SetPointSize((int)(10 * ZoomFactor));
+		dc->SetFont(TitleFont);
 
-WorkspaceCable* BasicWorkspaceFactory::CreateCable(WorkspaceNode *Input, WorkspaceNode *Output, int FromIndex, int ToIndex)
-{
-	return new BasicWorkspaceCable(Input, Output, FromIndex, ToIndex);
+		wxCoord TextWidth, TextHeight;
+		dc->GetTextExtent(Title, &TextWidth, &TextHeight);
+
+		float padding = 5 * ZoomFactor;
+
+		ScreenArea.width = TextWidth 
+			+ padding // Right padding
+			+ padding; // Left padding
+
+		wxPoint TextPosition(ScreenArea.x + padding, ScreenArea.y + padding);
+
+		if (IsSelected())
+			dc->SetPen(wxPen(wxColor(255, 100, 100), 1));
+		else
+			dc->SetPen(wxPen(wxColor(255, 255, 255), 1));
+
+		dc->SetBrush(wxBrush(wxColor(100, 100, 100)));
+
+		int TitleLineY = ScreenArea.y + padding + padding + TextHeight;
+
+		float InputWidth = 15 * ZoomFactor;
+		float InputHeight = 15 * ZoomFactor;
+		float InputPadding = 5 * ZoomFactor;
+
+		float OutputWidth = 15 * ZoomFactor;
+		float OutputHeight = 15 * ZoomFactor;
+		float OutputPadding = 5 * ZoomFactor;
+
+		int TotalHeightInput = InputList.size() * InputPadding
+			+ InputList.size() * InputHeight 
+			+ InputPadding + InputPadding + TextHeight;
+
+		int TotalHeightOutput = OutputList.size() * OutputPadding
+			+ OutputList.size() * InputHeight 
+			+ OutputPadding + OutputPadding + TextHeight;
+
+		for (size_t Index = 0; Index < InputList.size(); Index++)
+		{
+			int X = ScreenArea.x - InputWidth + 1;
+			int Y = TitleLineY + ((InputPadding + InputWidth) * Index);
+
+			dc->DrawRectangle(X, Y, InputWidth, InputHeight);
+		}
+
+		for (size_t Index = 0; Index < OutputList.size(); Index++)
+		{
+			int X = ScreenArea.GetRight();
+			int Y = TitleLineY + ((OutputPadding + OutputWidth) * Index);
+
+			dc->DrawRectangle(X, Y, OutputWidth, OutputHeight);
+		}
+
+		ScreenArea.height = TotalHeightInput > TotalHeightOutput ? TotalHeightInput : TotalHeightOutput;
+
+		dc->DrawRectangle(ScreenArea);
+		dc->DrawLine(
+			wxPoint(ScreenArea.x, TitleLineY), 
+			wxPoint(ScreenArea.x + ScreenArea.width, TitleLineY) );
+		
+		dc->SetTextForeground(wxColor(255, 255, 255));
+		dc->DrawText(Title, TextPosition);
+	}
+
+	Node* BasicWorkspaceFactory::CreateNode(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)
+	{
+		return new BasicWorkspaceNode(Area, InputCount, OutputCount, Title);
+	}
+
+	Cable* BasicWorkspaceFactory::CreateCable(Node* Input, Node* Output, int FromIndex, int ToIndex)
+	{
+		return new BasicWorkspaceCable(Input, Output, FromIndex, ToIndex);
+	}
 }

@@ -13,10 +13,10 @@
 #include <map>
 #include <vector>
 #include <wx/dcbuffer.h>
-#include "wxWorkspaceFactory.h"
-#include "wxWorkspaceListener.h"
-#include "wxWorkspaceState.h"
-#include "wxWorkspaceItem.h"
+#include "Factory.h"
+#include "Listener.h"
+#include "State.h"
+#include "Item.h"
 
 /**
  * The position of the watermark, this can be on the following 9 position.
@@ -72,7 +72,7 @@ public:
 	/**
 	 * Initializes a new instance of this class.
 	 */
-	wxWorkspaceView(wxWorkspaceFactory* Factory, wxWindow* parent, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize(640, 480), int style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL);
+	wxWorkspaceView(WorkspaceView::Factory* Factory, wxWindow* parent, int id = wxID_ANY, wxPoint pos = wxDefaultPosition, wxSize size = wxSize(640, 480), int style = wxDEFAULT_FRAME_STYLE|wxTAB_TRAVERSAL);
 	/**
 	 * Cleans up all resources used by this class.
 	 */
@@ -94,12 +94,12 @@ public:
 	/**
 	 * Sets the listener of this workspace and deletes the current one.
 	 */
-	void SetListener(WorkspaceListener *NewListener);
+	void SetListener(WorkspaceView::Listener* NewListener);
 public:
 	/**
 	 * Adds an item to the workspace.
 	 */
-	void AddItem(WorkspaceItem* Item);
+	void AddItem(WorkspaceView::Item* Item);
 	/**
 	 * Returns the total amount of items on the workspace.
 	 */
@@ -129,39 +129,39 @@ public:
 	/**
 	 * Gets an item from the given rectangle.
 	 */
-	WorkspaceItem* GetItemFromRectangle(const wxRect& Area) const;
+	WorkspaceView::Item* GetItemFromRectangle(const wxRect& Area) const;
 	/**
 	 * Gets all the items in the given rectangle.
 	 */
-	std::vector<WorkspaceItem *> GetItemsFromRectangle(const wxRect &Area) const;
+	std::vector<WorkspaceView::Item *> GetItemsFromRectangle(const wxRect& Area) const;
 private:
 	/**
 	 * Whether or not a mouse click was on a connector.
 	 */
-	bool HasClickedOnConnector(const wxPoint& ScreenPoint, ConnectorInfo* Result);
+	bool HasClickedOnConnector(const wxPoint& ScreenPoint, WorkspaceView::ConnectorInfo* Result);
 private:
 	/**
 	 * Draws the grid to the screen.
 	 */
-	void DrawGrid(wxBufferedPaintDC &dc, const wxSize &Size);
+	void DrawGrid(wxBufferedPaintDC& dc, const wxSize& Size);
 	/**
 	 * Draws a watermark to the screen if one has been set.
 	 */
-	void DrawWatermark(wxBufferedPaintDC &dc, const wxSize &Size);
+	void DrawWatermark(wxBufferedPaintDC& dc, const wxSize& Size);
 	/**
 	 * Draw the selection rectangle.
 	 */
-	void DrawSelection(wxBufferedPaintDC &dc, const wxSize &Size);
+	void DrawSelection(wxBufferedPaintDC& dc, const wxSize& Size);
 private:
 	/**
 	 * The list with all workspace items. This is what it's all about baby.
 	 */
-	std::vector<WorkspaceItem*> ItemsArray;
+	std::vector<WorkspaceView::Item*> ItemsArray;
 private:
 	/**
 	 * The current view state of the workspace.
 	 */
-	WorkspaceState ViewState;
+	WorkspaceView::State ViewState;
 private:
 	/**
 	 * This indicates the position of the watermark, if set to none; no watermark 
@@ -215,16 +215,16 @@ private:
 	/**
 	 * A map with items and coordinates.
 	 */
-	std::map<WorkspaceItem*, wxRect> SelectedItemPositionsOnMoveStart;
+	std::map<WorkspaceView::Item*, wxRect> SelectedItemPositionsOnMoveStart;
 private:
 	/**
 	 * The factory used to create items.
 	 */
-	wxWorkspaceFactory* Factory;
+	WorkspaceView::Factory* Factory;
 	/**
 	 * The listener of this workspace.
 	 */
-	WorkspaceListener *Listener;
+	WorkspaceView::Listener* Listener;
 private:
 	/**
 	 * Whether or not snap to grid is enabled.

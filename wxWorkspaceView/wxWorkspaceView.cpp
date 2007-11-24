@@ -24,7 +24,7 @@ wxWorkspaceView::wxWorkspaceView()
 {
 }
 
-wxWorkspaceView::wxWorkspaceView(wxWorkspaceFactory* Factory, wxWindow* parent, int id, wxPoint pos, wxSize size, int style)
+wxWorkspaceView::wxWorkspaceView(WorkspaceView::Factory* Factory, wxWindow* parent, int id, wxPoint pos, wxSize size, int style)
 : wxControl(parent, id, pos, size, style | wxNO_FULL_REPAINT_ON_RESIZE | wxCLIP_CHILDREN), Factory(Factory), Listener(0), GridStep(32.f)
 {
 	wxInitAllImageHandlers();
@@ -79,7 +79,7 @@ void wxWorkspaceView::SetGridColor(const wxColor& Color)
 	GridColor = Color;
 }
 
-void wxWorkspaceView::SetListener(WorkspaceListener *NewListener)
+void wxWorkspaceView::SetListener(WorkspaceView::Listener *NewListener)
 {
 	if (Listener)
 	{
@@ -90,7 +90,7 @@ void wxWorkspaceView::SetListener(WorkspaceListener *NewListener)
 	Listener = NewListener;
 }
 
-void wxWorkspaceView::AddItem(WorkspaceItem* Item)
+void wxWorkspaceView::AddItem(WorkspaceView::Item* Item)
 {
 	if (Item)
 		ItemsArray.push_back(Item);
@@ -120,7 +120,7 @@ void wxWorkspaceView::ClearSelection()
 
 void wxWorkspaceView::DeleteSelection()
 {
-	std::vector<WorkspaceItem*> ItemsToDelete, ItemsToKeep;
+	std::vector<WorkspaceView::Item*> ItemsToDelete, ItemsToKeep;
 	
 	for (size_t Index = 0; Index < ItemsArray.size(); ++Index)
 	{
@@ -150,7 +150,7 @@ void wxWorkspaceView::DeleteSelection()
 
 void wxWorkspaceView::AddToSelection(const wxRect& Area, bool OnlyTopMost)
 {
-	std::vector<WorkspaceItem*> Result = GetItemsFromRectangle(Area);
+	std::vector<WorkspaceView::Item*> Result = GetItemsFromRectangle(Area);
 
 	if (Listener)
 		Listener->OnSelectedItems(Result);
@@ -165,16 +165,16 @@ void wxWorkspaceView::AddToSelection(const wxRect& Area, bool OnlyTopMost)
 	}
 }
 
-WorkspaceItem* wxWorkspaceView::GetItemFromRectangle(const wxRect& Area) const
+WorkspaceView::Item* wxWorkspaceView::GetItemFromRectangle(const wxRect& Area) const
 {
-	std::vector<WorkspaceItem *> Result = GetItemsFromRectangle(Area);
+	std::vector<WorkspaceView::Item *> Result = GetItemsFromRectangle(Area);
 	
 	return Result.empty() ? NULL : Result[0];
 }
 
-std::vector<WorkspaceItem *> wxWorkspaceView::GetItemsFromRectangle(const wxRect &Area) const
+std::vector<WorkspaceView::Item *> wxWorkspaceView::GetItemsFromRectangle(const wxRect &Area) const
 {
-	std::vector<WorkspaceItem *> Result;
+	std::vector<WorkspaceView::Item *> Result;
 	
 	int Left = Area.x;
 	int Top = Area.y;
@@ -197,7 +197,7 @@ std::vector<WorkspaceItem *> wxWorkspaceView::GetItemsFromRectangle(const wxRect
 	
 	for (size_t Index = 0; Index < ItemsArray.size(); ++Index)
 	{
-		WorkspaceItem* Item = ItemsArray[Index];
+		WorkspaceView::Item* Item = ItemsArray[Index];
 
 		if (Item->IntersectsWith(Left, Top, Right, Bottom))
 			Result.push_back(Item);
@@ -206,7 +206,7 @@ std::vector<WorkspaceItem *> wxWorkspaceView::GetItemsFromRectangle(const wxRect
 	return Result;
 }
 
-bool wxWorkspaceView::HasClickedOnConnector(const wxPoint& ScreenPoint, ConnectorInfo* Result)
+bool wxWorkspaceView::HasClickedOnConnector(const wxPoint& ScreenPoint, WorkspaceView::ConnectorInfo* Result)
 {
 	for (size_t Index = 0; Index < ItemsArray.size(); ++Index)
 		if (ItemsArray[Index]->HasHitWithConnector(ScreenPoint, Result))
@@ -341,18 +341,18 @@ void wxWorkspaceView::OnLeftMouseDown(wxMouseEvent& event)
 		TempRect = ViewState.ScreenToWorld(TempRect);
 		
 		wxPoint ScreenPoint = ViewState.ScreenToWorld(InitialMouseDownPosition);
-		ConnectorInfo ConnectInfo;
+		WorkspaceView::ConnectorInfo ConnectInfo;
 		
 		if (HasClickedOnConnector(ScreenPoint, &ConnectInfo))
 		{
 			InteractionState = InteractionStateConnect;
 
-			WorkspaceNode *Input = ConnectInfo.PortIsOutput ? NULL : (WorkspaceNode*)ConnectInfo.Owner;
-			WorkspaceNode *Output = ConnectInfo.PortIsOutput ? (WorkspaceNode*)ConnectInfo.Owner : NULL;
+			WorkspaceView::Node* Input = ConnectInfo.PortIsOutput ? NULL : (WorkspaceView::Node*)ConnectInfo.Owner;
+			WorkspaceView::Node* Output = ConnectInfo.PortIsOutput ? (WorkspaceView::Node*)ConnectInfo.Owner : NULL;
 			int FromIndex = ConnectInfo.PortIndex;
 			int ToIndex = ConnectInfo.PortIndex;
 			
-			WorkspaceCable* NewCable = Factory->CreateCable(Input, Output, FromIndex, ToIndex);
+			WorkspaceView::Cable* NewCable = Factory->CreateCable(Input, Output, FromIndex, ToIndex);
 
 			NewCable->SetFloatingPosition(ScreenPoint);
 
@@ -362,7 +362,7 @@ void wxWorkspaceView::OnLeftMouseDown(wxMouseEvent& event)
 		}
 		else
 		{
-			WorkspaceItem* Item = GetItemFromRectangle(TempRect);
+			WorkspaceView::Item* Item = GetItemFromRectangle(TempRect);
 			
 			if (Item)
 			{
@@ -417,8 +417,8 @@ void wxWorkspaceView::OnLeftMouseUp(wxMouseEvent& event)
 		{
 			wxPoint ScreenPoint = ViewState.ScreenToWorld(event.GetPosition());
 
-			ConnectorInfo ConnectInfo;
-			WorkspaceCable* Cable = (WorkspaceCable*)ItemsArray.back();
+			WorkspaceView::ConnectorInfo ConnectInfo;
+			WorkspaceView::Cable* Cable = (WorkspaceView::Cable*)ItemsArray.back();
 			
 			bool Approved = false;
 			
@@ -520,7 +520,7 @@ void wxWorkspaceView::OnMouseMove(wxMouseEvent& event)
 		
 		if (ItemsArray.size() > 0)
 		{
-			WorkspaceCable* Cable = (WorkspaceCable*)ItemsArray.back();
+			WorkspaceView::Cable* Cable = (WorkspaceView::Cable*)ItemsArray.back();
 			Cable->SetFloatingPosition(WorldPosition);
 		}	
 	}
@@ -530,7 +530,7 @@ void wxWorkspaceView::OnMouseMove(wxMouseEvent& event)
 		Movement.x /= ViewState.ZoomFactor;
 		Movement.y /= ViewState.ZoomFactor;
 		
-		std::vector<WorkspaceItem*> ItemsThatWereMoved;
+		std::vector<WorkspaceView::Item*> ItemsThatWereMoved;
 		
 		for (size_t i = 0; i < ItemsArray.size(); ++i)
 		{

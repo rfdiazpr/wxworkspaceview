@@ -150,27 +150,27 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath=".\wxWorkspaceCable.cpp"
+				RelativePath=".\Cable.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceFactory.cpp"
+				RelativePath=".\Factory.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceItem.cpp"
+				RelativePath=".\Item.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceListener.cpp"
+				RelativePath=".\Listener.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceNode.cpp"
+				RelativePath=".\Node.cpp"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceState.cpp"
+				RelativePath=".\State.cpp"
 				>
 			</File>
 			<File
@@ -184,27 +184,27 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath=".\wxWorkspaceCable.h"
+				RelativePath=".\Cable.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceFactory.h"
+				RelativePath=".\Factory.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceItem.h"
+				RelativePath=".\Item.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceListener.h"
+				RelativePath=".\Listener.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceNode.h"
+				RelativePath=".\Node.h"
 				>
 			</File>
 			<File
-				RelativePath=".\wxWorkspaceState.h"
+				RelativePath=".\State.h"
 				>
 			</File>
 			<File
@@ -217,10 +217,6 @@
 			Filter="rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav"
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
-			<File
-				RelativePath="..\..\..\..\..\wxWidgets-2.8.6\include\wx\msw\wx.rc"
-				>
-			</File>
 		</Filter>
 	</Files>
 	<Globals>
