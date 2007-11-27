@@ -66,24 +66,27 @@ namespace WorkspaceView
 	{
 		for (int Index = 0; Index < InputCount; ++Index)
 		{
-			PortInfo p;
-			p.Label = "input";
-			InputList.push_back(p);
+			int X = -InputPortSize.GetWidth() + 1;
+			int Y = (Index * (InputPortSize.GetHeight() + InputPortPadding));
+
+			PortInfo Port;
+			Port.Label = wxString::Format("Input %d", Index);
+			Port.Area = wxRect(wxPoint(X, Y), InputPortSize);
+
+			InputList.push_back(Port);
 		}
 
 		for (int Index = 0; Index < OutputCount; ++Index)
 		{
-			PortInfo p;
-			OutputList.push_back(p);
+			int X = 125;
+			int Y = (Index * (OutputPortSize.GetHeight() + OutputPortPadding));
+
+			PortInfo Port;
+			Port.Label = wxString::Format("Output %d", Index);
+			Port.Area = wxRect(wxPoint(X, Y), OutputPortSize);
+
+			OutputList.push_back(Port);
 		}
-		
-		TitleFont = wxFont(
-			10, 
-			wxFONTFAMILY_DEFAULT, 
-			wxFONTSTYLE_NORMAL, 
-			wxFONTWEIGHT_NORMAL,
-			false,
-			"Tahoma");
 	}
 
 	void BasicWorkspaceNode::Draw(wxPaintDC* dc, const State& State)
@@ -132,22 +135,6 @@ namespace WorkspaceView
 			+ OutputList.size() * InputHeight 
 			+ OutputPadding + OutputPadding + TextHeight;
 
-		for (size_t Index = 0; Index < InputList.size(); Index++)
-		{
-			int X = ScreenArea.x - InputWidth + 1;
-			int Y = TitleLineY + ((InputPadding + InputWidth) * Index);
-
-			dc->DrawRectangle(X, Y, InputWidth, InputHeight);
-		}
-
-		for (size_t Index = 0; Index < OutputList.size(); Index++)
-		{
-			int X = ScreenArea.GetRight();
-			int Y = TitleLineY + ((OutputPadding + OutputWidth) * Index);
-
-			dc->DrawRectangle(X, Y, OutputWidth, OutputHeight);
-		}
-
 		ScreenArea.height = TotalHeightInput > TotalHeightOutput ? TotalHeightInput : TotalHeightOutput;
 
 		dc->DrawRectangle(ScreenArea);
@@ -157,6 +144,29 @@ namespace WorkspaceView
 		
 		dc->SetTextForeground(wxColor(255, 255, 255));
 		dc->DrawText(Title, TextPosition);
+			
+		TitleFont.SetPointSize((int)(8 * ZoomFactor));
+		dc->SetFont(TitleFont);
+
+		for (size_t Index = 0; Index < InputList.size(); Index++)
+		{
+			wxRect PortRect = InputList[Index].Area;
+			PortRect.x += WorldArea.x;
+			PortRect.y += WorldArea.y;// + padding + padding + TextHeight;
+			PortRect = State.WorldToScreen(PortRect);
+			dc->DrawRectangle(PortRect);
+
+			//dc->DrawText(InputList[Index].Label, wxPoint(PortRect.x + PortRect.GetWidth(), PortRect.y));
+		}
+
+		for (size_t Index = 0; Index < OutputList.size(); Index++)
+		{
+			wxRect PortRect = OutputList[Index].Area;
+			PortRect.x += WorldArea.x;
+			PortRect.y += WorldArea.y;// + padding + padding + TextHeight;
+			PortRect = State.WorldToScreen(PortRect);
+			dc->DrawRectangle(PortRect);
+		}
 	}
 
 	Node* BasicWorkspaceFactory::CreateNode(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)

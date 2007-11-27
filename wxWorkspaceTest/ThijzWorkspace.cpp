@@ -115,7 +115,7 @@ namespace WorkspaceView
 
 			ThijzPortInfo Port;
 			Port.Label = "";
-			Port.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
+			Port.Area = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
 			Port.LabelAngle = -phi * 57.295780f;
 			Port.LabelDirection.x = -cos(phi);
 			Port.LabelDirection.y = -sin(phi);
@@ -133,7 +133,7 @@ namespace WorkspaceView
 
 			ThijzPortInfo Port;
 			Port.Label = "input";
-			Port.ConnectorArea = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
+			Port.Area = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
 			Port.LabelAngle = -phi * 57.295780f;
 			Port.LabelDirection.x = -cos(phi);
 			Port.LabelDirection.y = -sin(phi);
@@ -200,7 +200,7 @@ namespace WorkspaceView
 
 		for (size_t Index = 0; Index < InputList.size(); Index++)
 		{
-			wxRect PortRect = InputList[Index].ConnectorArea;
+			wxRect PortRect = InputList[Index].Area;
 			PortRect.x += WorldArea.x;
 			PortRect.y += WorldArea.y;
 			PortRect = State.WorldToScreen(PortRect);
@@ -211,7 +211,7 @@ namespace WorkspaceView
 		
 		for (size_t Index = 0; Index < OutputList.size(); Index++)
 		{
-			wxRect PortRect = OutputList[Index].ConnectorArea;
+			wxRect PortRect = OutputList[Index].Area;
 			PortRect.x += WorldArea.x;
 			PortRect.y += WorldArea.y;
 			PortRect = State.WorldToScreen(PortRect);

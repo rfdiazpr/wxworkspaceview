@@ -33,13 +33,6 @@ namespace WorkspaceView
 		 */
 		virtual void Draw(wxPaintDC* dc, const State& State);
 	protected:
-		/**
-		 * The radius of this node.
-		 */
-		float Radius;
-	protected:
-		wxFont TitleFont;
-
 		wxPen BorderPenExtra;
 		wxBrush BorderBrush;
 		
