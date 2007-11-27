@@ -83,6 +83,10 @@ namespace WorkspaceView
 		return Area.Intersects(Rect);
 	}
 
+	void Item::OnZoom(float NewZoom)
+	{
+	}
+
 	EWorkspaceItemType Item::GetItemType() const
 	{
 		return ItemType;

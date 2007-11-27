@@ -22,6 +22,10 @@ namespace WorkspaceView
 	{
 	}
 
+	void OnZoom(float NewZoomValue)
+	{
+	}
+
 	bool Listener::ApproveCable(Cable* Cable)
 	{
 		return true;

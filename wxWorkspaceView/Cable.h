@@ -26,6 +26,15 @@ namespace WorkspaceView
 		Cable(Node* Input, Node* Output, int FromIndex, int ToIndex);
 	public:
 		/**
+		 * Returns the input node of this cable.
+		 */
+		const Node* GetInput();
+		/**
+		 * Returns the output node of this cable.
+		 */
+		const Node* GetOutput();
+	public:
+		/**
 		 * Checks if this item intersects with the given rectangle.
 		 */
 		virtual bool IntersectsWith(float Left, float Top, float Right, float Bottom) const;

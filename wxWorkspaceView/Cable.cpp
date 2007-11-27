@@ -14,6 +14,16 @@ namespace WorkspaceView
 	{
 		ConnectCable(Input, Output, FromIndex, ToIndex);
 	}
+	
+	const Node* Cable::GetInput()
+	{
+		return Input;
+	}
+	
+	const Node* Cable::GetOutput()
+	{
+		return Output;
+	}
 
 	bool Cable::IntersectsWith(float Left, float Top, float Right, float Bottom) const
 	{

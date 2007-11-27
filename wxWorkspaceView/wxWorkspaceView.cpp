@@ -458,10 +458,41 @@ void wxWorkspaceView::OnRightMouseDown(wxMouseEvent& event)
 		if (event.ControlDown())
 		{
 			InitialMouseDownPosition = event.GetPosition();
-			InteractionState = InteractionStateZoom;
-			ZoomFactorStart = ViewState.ZoomFactor;
-			PanningOffsetStart = ViewState.Offset;
-			CaptureMouse();
+
+			wxPoint ScreenPoint = ViewState.ScreenToWorld(InitialMouseDownPosition);
+			WorkspaceView::ConnectorInfo ConnectInfo;
+
+			if (HasClickedOnConnector(ScreenPoint, &ConnectInfo))
+			{
+				// Now loop through the item list and delete all cables connected 
+				// to this port.
+
+				WorkspaceView::Item* Owner = ConnectInfo.Owner;
+
+				for (size_t Index = 0; Index < ItemsArray.size(); ++Index)
+				{
+					WorkspaceView::Item* Item = ItemsArray[Index];
+					
+					if (Item->GetItemType() == WorkspaceView::WorkspaceItemTypeCable)
+					{
+						WorkspaceView::Cable* Cable = (WorkspaceView::Cable*)Item;
+
+						if (Cable->GetInput() == Owner || Cable->GetOutput() == Owner)
+						{
+							ItemsArray.erase(ItemsArray.begin() + Index);
+							delete Cable;
+							Refresh();
+						}
+					}
+				}
+			}
+			else
+			{
+				InteractionState = InteractionStateZoom;
+				ZoomFactorStart = ViewState.ZoomFactor;
+				PanningOffsetStart = ViewState.Offset;
+				CaptureMouse();
+			}
 		}
 	}
 	
@@ -493,6 +524,12 @@ void wxWorkspaceView::OnMouseMove(wxMouseEvent& event)
 			ZoomScale = MinimumZoomFactor / ZoomFactorStart;
 		
 		ViewState.ZoomFactor = ZoomFactorStart * ZoomScale;
+
+		if (Listener)
+			Listener->OnZoom(ViewState.ZoomFactor);
+
+		for (size_t i = 0; i < ItemsArray.size(); ++i)
+			ItemsArray[i]->OnZoom(ViewState.ZoomFactor);
 		
 		wxPoint ClickWorldPos = (InitialMouseDownPosition - PanningOffsetStart);
 		ClickWorldPos.x /= ZoomFactorStart;

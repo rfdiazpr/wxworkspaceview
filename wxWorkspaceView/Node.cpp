@@ -9,6 +9,19 @@ namespace WorkspaceView
 	Node::Node(const wxRect& Area, int InputCount, int OutputCount, const wxString& Title)
 		: Item(WorkspaceItemTypeNode, Area), Title(Title)
 	{
+		InputPortSize = wxSize(15, 15);
+		InputPortPadding = 5;
+		
+		OutputPortSize = wxSize(15, 15);
+		OutputPortPadding = 5;
+
+		TitleFont = wxFont(
+			10, 
+			wxFONTFAMILY_DEFAULT, 
+			wxFONTSTYLE_NORMAL, 
+			wxFONTWEIGHT_NORMAL,
+			false,
+			"Tahoma");
 	}
 	
 	size_t Node::AddInputPort(const PortInfo& Port)
@@ -41,7 +54,7 @@ namespace WorkspaceView
 		
 		for (size_t Index = 0; Index < OutputList.size(); ++Index)
 		{
-			if (OutputList[Index].ConnectorArea.Contains(RelativePoint))
+			if (OutputList[Index].Area.Contains(RelativePoint))
 			{
 				Result->Owner = this;
 				Result->PortIndex = (int)Index;
@@ -52,7 +65,7 @@ namespace WorkspaceView
 
 		for (size_t Index = 0; Index < InputList.size(); ++Index)
 		{
-			if (InputList[Index].ConnectorArea.Contains(RelativePoint))
+			if (InputList[Index].Area.Contains(RelativePoint))
 			{
 				Result->Owner = this;
 				Result->PortIndex = (int)Index;
@@ -73,18 +86,23 @@ namespace WorkspaceView
 			if ((int)OutputList.size() <= PortIndex || PortIndex < 0)
 				PortArea = wxRect(0, 0, 0, 0);
 			else
-				PortArea = OutputList[PortIndex].ConnectorArea;
+				PortArea = OutputList[PortIndex].Area;
 		}
 		else
 		{
 			if ((int)InputList.size() <= PortIndex || PortIndex < 0)
 				PortArea = wxRect(0, 0, 0, 0);
 			else
-				PortArea = InputList[PortIndex].ConnectorArea;
+				PortArea = InputList[PortIndex].Area;
 		}
 
 		PortArea.Offset(GetArea().GetTopLeft());
 
 		return PortArea;
+	}
+
+	void Node::OnZoom(float NewZoom)
+	{
+		// Change the area of each connector.
 	}
 }

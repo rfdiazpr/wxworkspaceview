@@ -17,6 +17,7 @@ namespace WorkspaceView
 		virtual void OnDeleteItemPre(Item* Item);
 		virtual void OnDeleteItemPost(Item* Item);
 		virtual void OnSelectedItems(std::vector<Item*> Items);
+		virtual void OnZoom(float NewZoomValue);
 		virtual bool ApproveCable(Cable* Cable);
 	};
 }

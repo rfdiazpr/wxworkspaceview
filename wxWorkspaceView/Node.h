@@ -21,7 +21,7 @@ namespace WorkspaceView
 		/**
 		 * The area in which a user can click to start drawing cables.
 		 */
-		wxRect ConnectorArea;
+		wxRect Area;
 	};
 
 	/**
@@ -62,6 +62,11 @@ namespace WorkspaceView
 		 * Gets the area of a specific port.
 		 */
 		wxRect GetPortArea(int PortIndex, bool Output) const;
+	public:
+		/**
+		 * Called when the zoom of the workspace has been changed.
+		 */
+		virtual void OnZoom(float NewZoom);
 	protected:
 		/**
 		 * The output connector list.
@@ -71,9 +76,31 @@ namespace WorkspaceView
 		 * The input connector list.
 		 */
 		std::vector<PortInfo> InputList;
+	protected:
+		/**
+		 * The area of an input port.
+		 */
+		wxSize InputPortSize;
+		/**
+		 * The padding between input ports.
+		 */
+		int InputPortPadding;
+		/**
+		 * The area of an output port.
+		 */
+		wxSize OutputPortSize;
+		/**
+		 * The padding between output ports.
+		 */
+		int OutputPortPadding;
+	protected:
 		/**
 		 * The title of this node.
 		 */
 		wxString Title;
+		/**
+		 * The font of the title.
+		 */
+		wxFont TitleFont;
 	};
 }

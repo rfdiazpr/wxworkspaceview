@@ -115,6 +115,11 @@ namespace WorkspaceView
 		virtual bool IntersectsWith(const wxRect& Rect) const;
 	public:
 		/**
+		 * Called when the zoom of the workspace has been changed.
+		 */
+		virtual void OnZoom(float NewZoom);
+	public:
+		/**
 		 * Returns the RTTI value of this item.
 		 */
 		EWorkspaceItemType GetItemType() const;
