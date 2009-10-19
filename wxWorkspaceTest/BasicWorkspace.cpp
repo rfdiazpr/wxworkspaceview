@@ -70,7 +70,7 @@ namespace WorkspaceView
 			int Y = (Index * (InputPortSize.GetHeight() + InputPortPadding));
 
 			PortInfo Port;
-			Port.Label = wxString::Format("Input %d", Index);
+			Port.Label = wxString::Format(_("Input %d"), Index);
 			Port.Area = wxRect(wxPoint(X, Y), InputPortSize);
 
 			InputList.push_back(Port);
@@ -82,7 +82,7 @@ namespace WorkspaceView
 			int Y = (Index * (OutputPortSize.GetHeight() + OutputPortPadding));
 
 			PortInfo Port;
-			Port.Label = wxString::Format("Output %d", Index);
+			Port.Label = wxString::Format(_("Output %d"), Index);
 			Port.Area = wxRect(wxPoint(X, Y), OutputPortSize);
 
 			OutputList.push_back(Port);

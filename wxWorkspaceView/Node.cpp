@@ -21,7 +21,7 @@ namespace WorkspaceView
 			wxFONTSTYLE_NORMAL, 
 			wxFONTWEIGHT_NORMAL,
 			false,
-			"Tahoma");
+			_("Tahoma"));
 	}
 	
 	size_t Node::AddInputPort(const PortInfo& Port)

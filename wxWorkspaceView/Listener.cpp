@@ -22,7 +22,7 @@ namespace WorkspaceView
 	{
 	}
 
-	void OnZoom(float NewZoomValue)
+	void  Listener::OnZoom(float NewZoomValue)
 	{
 	}
 

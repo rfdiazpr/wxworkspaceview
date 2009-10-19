@@ -446,7 +446,7 @@ void wxWorkspaceView::OnLeftMouseUp(wxMouseEvent& event)
 
 	SelectedItemPositionsOnMoveStart.clear();
 	InteractionState = InteractionStateNormal;
-	ReleaseCapture();
+	ReleaseMouse(); //ReleaseCapture();
 	UpdateCursor();
 	Refresh();
 }

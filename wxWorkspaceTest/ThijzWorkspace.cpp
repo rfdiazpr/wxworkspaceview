@@ -114,7 +114,7 @@ namespace WorkspaceView
 			float y = (Radius + NODE_OUTERBORDERSIZE) * sin(phi) + Radius;
 
 			ThijzPortInfo Port;
-			Port.Label = "";
+			Port.Label = _("");
 			Port.Area = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
 			Port.LabelAngle = -phi * 57.295780f;
 			Port.LabelDirection.x = -cos(phi);
@@ -132,7 +132,7 @@ namespace WorkspaceView
 			float y = (Radius+NODE_OUTERBORDERSIZE) * sin(phi) + Radius;
 
 			ThijzPortInfo Port;
-			Port.Label = "input";
+			Port.Label = _("input");
 			Port.Area = wxRect((int)(x-NODE_PORTRADIUS), y-NODE_PORTRADIUS, (int)(NODE_PORTRADIUS*2.0f), (int)(NODE_PORTRADIUS*2.0f));
 			Port.LabelAngle = -phi * 57.295780f;
 			Port.LabelDirection.x = -cos(phi);
@@ -146,7 +146,7 @@ namespace WorkspaceView
 			wxFONTSTYLE_NORMAL, 
 			wxFONTWEIGHT_NORMAL,
 			false,
-			"Tahoma");
+			_("Tahoma"));
 
 		BorderPenExtra = wxPen(wxColor(0, 0, 0), 1);
 		BorderBrush = wxBrush(wxColor(149, 219, 0));
