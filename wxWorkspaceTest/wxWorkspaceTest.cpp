@@ -12,8 +12,8 @@ public:
 		long style = wxDEFAULT_FRAME_STYLE|wxCLIP_CHILDREN|wxNO_FULL_REPAINT_ON_RESIZE)
 		: wxFrame(parent, id, title, pos, size, style)
 	{
-		//WorkspaceView::ThijzWorkspaceFactory* Factory = new WorkspaceView::ThijzWorkspaceFactory();
-		WorkspaceView::BasicWorkspaceFactory* Factory = new WorkspaceView::BasicWorkspaceFactory();
+		WorkspaceView::ThijzWorkspaceFactory* Factory = new WorkspaceView::ThijzWorkspaceFactory();
+		//WorkspaceView::BasicWorkspaceFactory* Factory = new WorkspaceView::BasicWorkspaceFactory();
 
 		Workspace = new wxWorkspaceView(Factory, this);
 		//Workspace->SetWatermark(wxT("Watermark.jpg"), WatermarkPositionBottomRight);

@@ -3,6 +3,7 @@
  */
 
 #include "wxWorkspaceView.h"
+#include "wx/dcgraph.h"
 
 IMPLEMENT_DYNAMIC_CLASS(wxWorkspaceView, wxControl);
 
@@ -215,7 +216,7 @@ bool wxWorkspaceView::HasClickedOnConnector(const wxPoint& ScreenPoint, Workspac
 	return false;
 }
 
-void wxWorkspaceView::DrawGrid(wxBufferedPaintDC &dc, const wxSize &Size)
+void wxWorkspaceView::DrawGrid(wxDC &dc, const wxSize &Size)
 {
 	wxPen GridPen(GridColor);
 	dc.SetPen(GridPen);
@@ -241,7 +242,7 @@ void wxWorkspaceView::DrawGrid(wxBufferedPaintDC &dc, const wxSize &Size)
 		dc.DrawLine(0, Y, Size.GetWidth(), Y);
 }
 
-void wxWorkspaceView::DrawWatermark(wxBufferedPaintDC &dc, const wxSize &Size)
+void wxWorkspaceView::DrawWatermark(wxDC &dc, const wxSize &Size)
 {
 	if (WatermarkPosition != WatermarkPositionNone && WatermarkImage.Ok())
 	{
@@ -286,7 +287,7 @@ void wxWorkspaceView::DrawWatermark(wxBufferedPaintDC &dc, const wxSize &Size)
 	}
 }
 
-void wxWorkspaceView::DrawSelection(wxBufferedPaintDC &dc, const wxSize &Size)
+void wxWorkspaceView::DrawSelection(wxDC &dc, const wxSize &Size)
 {
 	if (InteractionState == InteractionStateSelect)
 	{
@@ -305,7 +306,16 @@ void wxWorkspaceView::DrawSelection(wxBufferedPaintDC &dc, const wxSize &Size)
 
 void wxWorkspaceView::OnPaint(wxPaintEvent& WXUNUSED(event))
 {
+
+#if wxUSE_GRAPHICS_CONTEXT
+	// using the wrapper for the new graphicscontext
+	// main benefit: AA
+	wxAutoBufferedPaintDC pdc(this);
+	wxGCDC dc(pdc);
+	PrepareDC(dc);
+#else
 	wxBufferedPaintDC dc(this);
+#endif //wxUSE_GRAPHICS_CONTEXT
 
 	wxSize Size = GetClientSize();
 	wxCoord Width = 0, Height = 0;

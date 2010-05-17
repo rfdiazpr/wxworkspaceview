@@ -143,15 +143,15 @@ private:
 	/**
 	 * Draws the grid to the screen.
 	 */
-	void DrawGrid(wxBufferedPaintDC& dc, const wxSize& Size);
+	void DrawGrid(wxDC& dc, const wxSize& Size);
 	/**
 	 * Draws a watermark to the screen if one has been set.
 	 */
-	void DrawWatermark(wxBufferedPaintDC& dc, const wxSize& Size);
+	void DrawWatermark(wxDC& dc, const wxSize& Size);
 	/**
 	 * Draw the selection rectangle.
 	 */
-	void DrawSelection(wxBufferedPaintDC& dc, const wxSize& Size);
+	void DrawSelection(wxDC& dc, const wxSize& Size);
 private:
 	/**
 	 * The list with all workspace items. This is what it's all about baby.
