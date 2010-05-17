@@ -19,6 +19,7 @@ public:
 		//Workspace->SetWatermark(wxT("Watermark.jpg"), WatermarkPositionBottomRight);
 		//Workspace->SetBackColor(wxColor(0, 0, 0));
 		//Workspace->SetGridColor(wxColor(60, 60, 60));
+		//Workspace->SetAntiAlias(false);
 
 		WorkspaceView::Node* Item1 = Factory->CreateNode(wxRect(100, 100, 100, 100), 2, 4, wxT("This is Sample Node 1"));
 		WorkspaceView::Node* Item2 = Factory->CreateNode(wxRect(300, 300, 100, 100), 2, 2, wxT("Sample Node 2"));

@@ -79,6 +79,10 @@ public:
 	~wxWorkspaceView();
 public:
 	/** 
+	 * Enables/Disables AA
+	 */
+	void SetAntiAlias(bool Enable);
+	/** 
 	 * Sets the watermark position.
 	 */
 	void SetWatermark(const wxString& Image, EWatermarkPosition Position);
@@ -136,10 +140,19 @@ public:
 	std::vector<WorkspaceView::Item *> GetItemsFromRectangle(const wxRect& Area) const;
 private:
 	/**
+	 * Assure that a given rectangle has a positive width and height.
+	 */
+	wxRect NormalizeRectangle(const wxRect& Rect);
+private:
+	/**
 	 * Whether or not a mouse click was on a connector.
 	 */
 	bool HasClickedOnConnector(const wxPoint& ScreenPoint, WorkspaceView::ConnectorInfo* Result);
 private:
+	/**
+	 * Draws the whole view.
+	 */
+	void DrawView(wxDC& dc);
 	/**
 	 * Draws the grid to the screen.
 	 */
@@ -152,6 +165,15 @@ private:
 	 * Draw the selection rectangle.
 	 */
 	void DrawSelection(wxDC& dc, const wxSize& Size);
+private:
+	/**
+	 * Paint our control using AA (uses wx's graphics contexts)
+	 */
+	void PaintAntiAliased();
+	/**
+	 * Paint our control without any AA
+	 */
+	void PaintAliased();
 private:
 	/**
 	 * The list with all workspace items. This is what it's all about baby.
@@ -235,6 +257,7 @@ private:
 	 */
 	float GridStep;
 private:
+	bool AntiAliased;
 	wxColor BackColor;
 	wxColor GridColor;
 private:

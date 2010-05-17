@@ -26,7 +26,8 @@ wxWorkspaceView::wxWorkspaceView()
 }
 
 wxWorkspaceView::wxWorkspaceView(WorkspaceView::Factory* Factory, wxWindow* parent, int id, wxPoint pos, wxSize size, int style)
-: wxControl(parent, id, pos, size, style | wxNO_FULL_REPAINT_ON_RESIZE | wxCLIP_CHILDREN), Factory(Factory), Listener(0), GridStep(32.f)
+: wxControl(parent, id, pos, size, style | wxNO_FULL_REPAINT_ON_RESIZE | wxCLIP_CHILDREN), 
+Factory(Factory), Listener(0), GridStep(32.f), AntiAliased(true)
 {
 	wxInitAllImageHandlers();
 
@@ -62,6 +63,11 @@ wxWorkspaceView::~wxWorkspaceView()
 		delete Listener;
 		Listener = 0;
 	}
+}
+
+void wxWorkspaceView::SetAntiAlias(bool Enable)
+{
+	AntiAliased = Enable;
 }
 
 void wxWorkspaceView::SetWatermark(const wxString& Image, EWatermarkPosition Position)
@@ -293,30 +299,71 @@ void wxWorkspaceView::DrawSelection(wxDC &dc, const wxSize &Size)
 	{
 		wxRect ScreenRect = ViewState.WorldToScreen(SelectionRect);
 		
-		static wxBrush selectionBrush(wxColour(255,255,255),wxTRANSPARENT);
-		static wxPen selectionPen(wxColour(255,255,255),2, wxSHORT_DASH);
+		if (AntiAliased)
+		{
+			static wxBrush selectionBrush(wxColour(255,255,255),wxTRANSPARENT);
+			static wxPen selectionPen(wxColour(0,0,0,128),2, wxSHORT_DASH);
 
-		dc.SetLogicalFunction(wxXOR);
-		dc.SetBrush(selectionBrush);
-		dc.SetPen(selectionPen);
-		dc.DrawRectangle(ScreenRect);
-		dc.SetLogicalFunction(wxSET);
+			// We have to draw a normalized version of the given rectangle because
+			// earlier versions of wx' graphics context rectangle drawing function
+			// couldn't handle negative width/heights.
+
+			dc.SetBrush(selectionBrush);
+			dc.SetPen(selectionPen);
+			dc.DrawRectangle(NormalizeRectangle(ScreenRect));
+		}
+		else
+		{
+			static wxBrush selectionBrush(wxColour(255,255,255),wxTRANSPARENT);
+			static wxPen selectionPen(wxColour(255,255,255),2, wxSHORT_DASH);
+
+			dc.SetLogicalFunction(wxXOR);
+			dc.SetBrush(selectionBrush);
+			dc.SetPen(selectionPen);
+			dc.DrawRectangle(ScreenRect);
+			dc.SetLogicalFunction(wxSET);
+		}
 	}
 }
 
-void wxWorkspaceView::OnPaint(wxPaintEvent& WXUNUSED(event))
-{
 
+void wxWorkspaceView::PaintAntiAliased()
+{
 #if wxUSE_GRAPHICS_CONTEXT
-	// using the wrapper for the new graphicscontext
-	// main benefit: AA
 	wxAutoBufferedPaintDC pdc(this);
 	wxGCDC dc(pdc);
 	PrepareDC(dc);
-#else
-	wxBufferedPaintDC dc(this);
-#endif //wxUSE_GRAPHICS_CONTEXT
 
+	DrawView(dc);
+#endif
+}
+
+void wxWorkspaceView::PaintAliased()
+{
+	wxAutoBufferedPaintDC dc(this);
+
+	DrawView(dc);
+}
+
+
+void wxWorkspaceView::OnPaint(wxPaintEvent& WXUNUSED(event))
+{
+	bool UseAA = false;
+
+#if wxUSE_GRAPHICS_CONTEXT
+	// AA is only supported when wx is compiled with wxUSE_GRAPHICS_CONTEXT=1
+	UseAA = AntiAliased;
+#endif
+
+	if (UseAA)
+		PaintAntiAliased();
+	else
+		PaintAliased();
+}
+
+
+void wxWorkspaceView::DrawView(wxDC& dc)
+{
 	wxSize Size = GetClientSize();
 	wxCoord Width = 0, Height = 0;
 	GetClientSize(&Width, &Height);
@@ -654,4 +701,27 @@ void wxWorkspaceView::UpdateCursor()
 		SetCursor(CursorList[CursorMove]);
 		break;
 	}
+}
+
+wxRect wxWorkspaceView::NormalizeRectangle(const wxRect& Rect)
+{
+	wxRect Result = Rect;
+
+	// Assure we always have a positive width and height
+	if (Result.width < 0)
+	{
+		if (Result.width <= -2)
+			Result.x += Result.width + 1;
+
+		Result.width = -Result.width;
+	}
+	if (Result.height < 0)
+	{
+		if (Result.height <= -2)
+			Result.y += Result.height + 1;
+
+		Result.height = -Result.height;
+	}
+
+	return Result;
 }
